@@ -77,6 +77,7 @@ final class TutorialController extends AbstractController
             'comments' => $comments,
             'form' => $form,
         ]);
+        
     }
 
     // Tutoriels d'une catégorie
@@ -97,5 +98,37 @@ final class TutorialController extends AbstractController
             'title' => 'Tag : ' . $tag->getName(),
             'tutorials' => $tag->getTutorials(),
         ]);
+    }
+        // Modification : seulement l'auteur (vérifié par le Voter)
+    #[Route('/tutorial/{slug:tutorial}/edit', name: 'app_tutorial_edit')]
+    #[IsGranted('TUTORIAL_EDIT', subject: 'tutorial')]
+    public function edit(Tutorial $tutorial, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(TutorialType::class, $tutorial);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_tutorial_show', ['slug' => $tutorial->getSlug()]);
+        }
+
+        return $this->render('tutorial/edit.html.twig', [
+            'form' => $form,
+            'tutorial' => $tutorial,
+        ]);
+    }
+
+    // Suppression : seulement l'auteur (vérifié par le Voter)
+    #[Route('/tutorial/{slug:tutorial}/delete', name: 'app_tutorial_delete', methods: ['POST'])]
+    #[IsGranted('TUTORIAL_DELETE', subject: 'tutorial')]
+    public function delete(Tutorial $tutorial, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $tutorial->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($tutorial);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_home');
     }
 }
