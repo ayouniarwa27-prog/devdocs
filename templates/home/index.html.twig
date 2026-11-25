@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - DevDocs{% endblock %}
+
+{% block body %}
+    {% for tutorial in tutorials %}
+        <div class="post-preview">
+            <a href="#">
+                <h2 class="post-title">{{ tutorial.title }}</h2>
+                <h3 class="post-subtitle">{{ tutorial.content|slice(0, 120) }}…</h3>
+            </a>
+            <p class="post-meta">
+                Par <strong>{{ tutorial.author.pseudonyme }}</strong>
+                le {{ tutorial.createdAt|date('d/m/Y') }}
+                dans <span class="badge bg-primary">{{ tutorial.category.name }}</span>
+                {% for tag in tutorial.tags %}
+                    <span class="badge bg-secondary">{{ tag.name }}</span>
+                {% endfor %}
+            </p>
+        </div>
+        <hr class="my-4" />
+    {% else %}
+        <p>Aucun tutoriel pour le moment.</p>
+    {% endfor %}
+{% endblock %}
