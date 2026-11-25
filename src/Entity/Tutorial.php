@@ -42,9 +42,16 @@ class Tutorial
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'tutorials')]
     private Collection $tags;
 
+    /**
+     * @var Collection<int, Comment>
+     */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'tutorial', orphanRemoval: true)]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
 
@@ -145,6 +152,36 @@ class Tutorial
     public function removeTag(Tag $tag): static
     {
         $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setTutorial($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getTutorial() === $this) {
+                $comment->setTutorial(null);
+            }
+        }
 
         return $this;
     }
