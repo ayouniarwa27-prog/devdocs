@@ -1,0 +1,16 @@
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden;">
+    <div style="background-color: #0d6efd; color: #ffffff; padding: 20px; text-align: center;">
+        <h1 style="margin: 0;">Bienvenue sur DevDocs !</h1>
+    </div>
+    <div style="padding: 20px; color: #212529;">
+        <p>Bonjour <strong>{{ user.pseudonyme }}</strong>,</p>
+        <p>Votre compte a bien été créé avec l'adresse <strong>{{ user.email }}</strong>.</p>
+        <p>Vous pouvez dès maintenant publier vos tutoriels et commenter ceux de la communauté.</p>
+        <p style="text-align: center; margin: 30px 0;">
+            <a href="{{ url('app_home') }}" style="background-color: #0d6efd; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 5px;">Découvrir DevDocs</a>
+        </p>
+    </div>
+    <div style="background-color: #f8f9fa; padding: 10px; text-align: center; font-size: 12px; color: #6c757d;">
+        © DevDocs
+    </div>
+</div>

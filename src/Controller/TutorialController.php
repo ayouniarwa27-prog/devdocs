@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Controller;
-
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use App\Entity\Category;
 use App\Entity\Comment;
 use App\Entity\Tag;
@@ -23,7 +26,13 @@ final class TutorialController extends AbstractController
     // Création d'un tutoriel (membres connectés uniquement)
     #[Route('/tutorial/new', name: 'app_tutorial_new', priority: 10)]
     #[IsGranted('ROLE_USER')]
-    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+        public function new(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        SluggerInterface $slugger,
+        MailerInterface $mailer,
+        #[Autowire('%env(ADMIN_EMAIL)%')] string $adminEmail,
+    ): Response
     {
         $tutorial = new Tutorial();
         $form = $this->createForm(TutorialType::class, $tutorial);
@@ -36,6 +45,16 @@ final class TutorialController extends AbstractController
 
             $entityManager->persist($tutorial);
             $entityManager->flush();
+                        // Notification à l'administrateur
+            $email = (new TemplatedEmail())
+                ->from(new Address('noreply@devdocs.local', 'DevDocs'))
+                ->to($adminEmail)
+                ->subject('Nouveau tutoriel : ' . $tutorial->getTitle())
+                ->htmlTemplate('emails/new_tutorial.html.twig')
+                ->context(['tutorial' => $tutorial]);
+
+            $mailer->send($email);
+
 
             return $this->redirectToRoute('app_tutorial_show', ['slug' => $tutorial->getSlug()]);
         }
