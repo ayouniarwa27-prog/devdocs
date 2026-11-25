@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil - DevDocs{% endblock %}
+
+{% block body %}
+    <h2 class="mb-4">Mon profil</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <p class="mb-1"><strong>Pseudonyme :</strong> {{ app.user.pseudonyme }}</p>
+            <p class="mb-0"><strong>E-mail :</strong> {{ app.user.email }}</p>
+        </div>
+    </div>
+
+    <h3 class="mb-3">Mes tutoriels ({{ app.user.tutorials|length }})</h3>
+    <div class="row">
+        {% for tutorial in app.user.tutorials %}
+            {{ include('tutorial/_card.html.twig') }}
+        {% else %}
+            <p>Vous n'avez encore publié aucun tutoriel.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
