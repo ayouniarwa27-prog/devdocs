@@ -23,9 +23,11 @@ class Category
     private Collection $tutorials;
 
     #[ORM\Column(length: 100)]
+     #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+     #[Assert\NotBlank]
     private ?string $description = null;
 
     public function __construct()

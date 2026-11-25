@@ -17,12 +17,15 @@ class Tutorial
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 50)]
     private ?string $content = null;
 
     #[ORM\Column]
@@ -34,6 +37,7 @@ class Tutorial
 
     #[ORM\ManyToOne(inversedBy: 'tutorials')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull]
     private ?Category $category = null;
 
     /**
