@@ -1,0 +1,22 @@
+<div class="col-md-6 mb-4">
+    <div class="card h-100 shadow-sm">
+        <div class="card-body">
+            <a href="{{ path('app_category_show', {id: tutorial.category.id}) }}"
+               class="badge bg-primary text-decoration-none mb-2">{{ tutorial.category.name }}</a>
+
+            <h5 class="card-title">
+                <a href="{{ path('app_tutorial_show', {slug: tutorial.slug}) }}">{{ tutorial.title }}</a>
+            </h5>
+
+            <p class="card-text text-muted small">{{ tutorial.content|striptags|slice(0, 100) }}…</p>
+
+            {% for tag in tutorial.tags %}
+                <a href="{{ path('app_tag_show', {id: tag.id}) }}"
+                   class="badge bg-secondary text-decoration-none">{{ tag.name }}</a>
+            {% endfor %}
+        </div>
+        <div class="card-footer small text-muted">
+            Par {{ tutorial.author.pseudonyme }} le {{ tutorial.createdAt|date('d/m/Y') }}
+        </div>
+    </div>
+</div>

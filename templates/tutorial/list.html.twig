@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }} - DevDocs{% endblock %}
+
+{% block body %}
+    <h2 class="mb-4">{{ title }}</h2>
+    <div class="row">
+        {% for tutorial in tutorials %}
+            {{ include('tutorial/_card.html.twig') }}
+        {% else %}
+            <p>Aucun tutoriel ici.</p>
+        {% endfor %}
+    </div>
+    <a href="{{ path('app_home') }}" class="btn btn-outline-primary">← Retour à l'accueil</a>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ tutorial.title }} - DevDocs{% endblock %}
+
+{# On remplace l'en-tête de la base par celui du tutoriel #}
+{% block header %}
+<header class="masthead" style="background-image: url('{{ asset('template/assets/img/post-bg.jpg') }}')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-heading">
+                    <h1>{{ tutorial.title }}</h1>
+                    <span class="meta">
+                        Par {{ tutorial.author.pseudonyme }} le {{ tutorial.createdAt|date('d/m/Y') }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block body %}
+    <p>
+        <a href="{{ path('app_category_show', {id: tutorial.category.id}) }}"
+           class="badge bg-primary text-decoration-none">{{ tutorial.category.name }}</a>
+        {% for tag in tutorial.tags %}
+            <a href="{{ path('app_tag_show', {id: tag.id}) }}"
+               class="badge bg-secondary text-decoration-none">{{ tag.name }}</a>
+        {% endfor %}
+    </p>
+
+    <article class="mb-5">
+        {{ tutorial.content|nl2br }}
+    </article>
+
+    <h3>Commentaires ({{ comments|length }})</h3>
+    {% for comment in comments %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <p class="card-text">{{ comment.content }}</p>
+                <small class="text-muted">
+                    {{ comment.author.pseudonyme }} – {{ comment.createdAt|date('d/m/Y à H:i') }}
+                </small>
+            </div>
+        </div>
+    {% else %}
+        <p>Aucun commentaire pour le moment.</p>
+    {% endfor %}
+{% endblock %}

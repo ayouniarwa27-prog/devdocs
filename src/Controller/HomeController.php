@@ -13,7 +13,7 @@ final class HomeController extends AbstractController
     public function index(TutorialRepository $tutorialRepository): Response
     {
         // Récupère tous les tutoriels, du plus récent au plus ancien
-        $tutorials = $tutorialRepository->findBy([], ['createdAt' => 'DESC']);
+      $tutorials = $tutorialRepository->findBy([], ['createdAt' => 'DESC'], 6);
 
         // Envoie la liste à la vue Twig
         return $this->render('home/index.html.twig', [
