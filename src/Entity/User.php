@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -34,6 +36,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 50)]
     private ?string $pseudonyme = null;
+
+    /**
+     * @var Collection<int, Tutorial>
+     */
+    #[ORM\OneToMany(targetEntity: Tutorial::class, mappedBy: 'author')]
+    private Collection $tutorials;
+
+    public function __construct()
+    {
+        $this->tutorials = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -124,6 +137,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPseudonyme(string $pseudonyme): static
     {
         $this->pseudonyme = $pseudonyme;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tutorial>
+     */
+    public function getTutorials(): Collection
+    {
+        return $this->tutorials;
+    }
+
+    public function addTutorial(Tutorial $tutorial): static
+    {
+        if (!$this->tutorials->contains($tutorial)) {
+            $this->tutorials->add($tutorial);
+            $tutorial->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTutorial(Tutorial $tutorial): static
+    {
+        if ($this->tutorials->removeElement($tutorial)) {
+            // set the owning side to null (unless already changed)
+            if ($tutorial->getAuthor() === $this) {
+                $tutorial->setAuthor(null);
+            }
+        }
 
         return $this;
     }

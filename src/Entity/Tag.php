@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TagRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
@@ -15,6 +17,17 @@ class Tag
 
     #[ORM\Column(length: 50)]
     private ?string $name = null;
+
+    /**
+     * @var Collection<int, Tutorial>
+     */
+    #[ORM\ManyToMany(targetEntity: Tutorial::class, mappedBy: 'tags')]
+    private Collection $tutorials;
+
+    public function __construct()
+    {
+        $this->tutorials = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -29,6 +42,33 @@ class Tag
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tutorial>
+     */
+    public function getTutorials(): Collection
+    {
+        return $this->tutorials;
+    }
+
+    public function addTutorial(Tutorial $tutorial): static
+    {
+        if (!$this->tutorials->contains($tutorial)) {
+            $this->tutorials->add($tutorial);
+            $tutorial->addTag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTutorial(Tutorial $tutorial): static
+    {
+        if ($this->tutorials->removeElement($tutorial)) {
+            $tutorial->removeTag($this);
+        }
 
         return $this;
     }
