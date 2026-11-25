@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_ARWA', fields: ['arwa'])]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -20,7 +20,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    private ?string $arwa = null;
+    private ?string $email = null;
 
     /**
      * @var list<string> The user roles
@@ -60,14 +60,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getArwa(): ?string
+    public function getEmail(): ?string
     {
-        return $this->arwa;
+        return $this->email;
     }
 
-    public function setArwa(string $arwa): static
+    public function setEmail(string $email): static
     {
-        $this->arwa = $arwa;
+        $this->email = $email;
 
         return $this;
     }
@@ -79,7 +79,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->arwa;
+        return (string) $this->email;
     }
 
     /**
