@@ -2,7 +2,6 @@
 
 {% block title %}{{ tutorial.title }} - DevDocs{% endblock %}
 
-{# On remplace l'en-tête de la base par celui du tutoriel #}
 {% block header %}
 <header class="masthead" style="background-image: url('{{ asset('template/assets/img/post-bg.jpg') }}')">
     <div class="container position-relative px-4 px-lg-5">
@@ -35,6 +34,18 @@
     </article>
 
     <h3>Commentaires ({{ comments|length }})</h3>
+
+    {# Formulaire de commentaire : seulement pour les membres connectés #}
+    {% if app.user %}
+        {{ form_start(form) }}
+            {{ form_row(form.content) }}
+            <button type="submit" class="btn btn-primary mb-4">Commenter</button>
+        {{ form_end(form) }}
+    {% else %}
+        <p><a href="{{ path('app_login') }}">Connectez-vous</a> pour laisser un commentaire.</p>
+    {% endif %}
+
+    {# Liste des commentaires, du plus récent au plus ancien #}
     {% for comment in comments %}
         <div class="card mb-3">
             <div class="card-body">
